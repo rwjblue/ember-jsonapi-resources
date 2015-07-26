@@ -25,7 +25,7 @@ export default Ember.Service.extend({
     @return {Promise}
   */
   find(type, options) {
-    const service = this._service(type);
+    const service = this._service(type, options);
     return service.find(options);
   },
 
@@ -103,8 +103,10 @@ export default Ember.Service.extend({
     @method cacheResource
     @param {String} type - the entity or resource name will be pluralized
   */
-  _service(type) {
-    type = pluralize(type);
+  _service(type, options = {}) {
+    if (!options.singleton) {
+      type = pluralize(type);
+    }
     if (!this[type]) {
       throw new Error(type + ' service not initialized');
     }
